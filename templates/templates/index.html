@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sentiment Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI Sentiment Analyzer</h1>
+        <p class="subtitle">Analyze the sentiment of any text in real-time</p>
+        
+        <div class="input-section">
+            <textarea id="text-input" placeholder="Enter your text here... (e.g., I love this product!)" rows="4"></textarea>
+            <button onclick="analyzeSentiment()">Analyze Sentiment</button>
+        </div>
+        
+        <div id="result" class="result-card" style="display: none;">
+            <div id="sentiment-display"></div>
+            <div id="confidence"></div>
+        </div>
+        
+        <div class="history-section">
+            <h2>📊 Analysis History</h2>
+            <div id="history-list"></div>
+            <button onclick="loadHistory()" class="secondary-btn">Refresh History</button>
+            <button onclick="showVisualization()" class="secondary-btn">📈 Show Visualization</button>
+        </div>
+        
+        <div id="visualization" style="display: none;">
+            <h2>📊 Sentiment Distribution</h2>
+            <img id="viz-image" src="" alt="Sentiment Visualization">
+        </div>
+    </div>
+    
+    <script>
+        async function analyzeSentiment() {
+            const text = document.getElementById('text-input').value;
+            if (!text) {
+                alert('Please enter some text to analyze!');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result-card loading';
+            document.getElementById('sentiment-display').innerHTML = 'Analyzing...';
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: 'text=' + encodeURIComponent(text)
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                resultDiv.className = 'result-card ' + data.label;
+                document.getElementById('sentiment-display').innerHTML = 
+                    `<div class="emoji-big">${data.sentiment.split(' ')[1]}</div>
+                     <div class="sentiment-text">${data.sentiment}</div>`;
+                document.getElementById('confidence').innerHTML = 
+                    `Confidence: <strong>${data.score}%</strong>`;
+                
+                loadHistory();
+            } catch (error) {
+                alert('Error analyzing text. Please try again.');
+                console.error(error);
+            }
+        }
+        
+        async function loadHistory() {
+            try {
+                const response = await fetch('/history');
+                const history = await response.json();
+                
+                const list = document.getElementById('history-list');
+                if (history.length === 0) {
+                    list.innerHTML = '<p class="empty">No analysis history yet.</p>';
+                    return;
+                }
+                
+                list.innerHTML = history.map(item => `
+                    <div class="history-item ${item.sentiment.toLowerCase()}">
+                        <span class="text">${item.text}</span>
+                        <span class="sentiment-badge">${item.sentiment}</span>
+                        <span class="score">${(item.score * 100).toFixed(1)}%</span>
+                        <span class="time">${item.timestamp}</span>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+        
+        async function showVisualization() {
+            const vizDiv = document.getElementById('visualization');
+            try {
+                const response = await fetch('/visualize');
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                vizDiv.style.display = 'block';
+                document.getElementById('viz-image').src = 'data:image/png;base64,' + data.image;
+            } catch (error) {
+                alert('Error loading visualization. Please analyze some text first.');
+                console.error(error);
+            }
+        }
+        
+        window.onload = loadHistory;
+        
+        document.getElementById('text-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                analyzeSentiment();
+            }
+        });
+    </script>
+</body>
+</html>
