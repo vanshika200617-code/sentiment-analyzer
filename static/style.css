@@ -1,0 +1,249 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+h1 {
+    color: #333;
+    font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+textarea {
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    resize: vertical;
+    min-height: 120px;
+    transition: border-color 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+button {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.secondary-btn {
+    background: #f0f0f0;
+    color: #333;
+    margin: 5px;
+}
+
+.secondary-btn:hover {
+    background: #e0e0e0;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.result-card {
+    padding: 25px;
+    border-radius: 15px;
+    margin: 20px 0;
+    text-align: center;
+    display: none;
+}
+
+.result-card.loading {
+    display: block;
+    background: #f8f9fa;
+    color: #666;
+}
+
+.result-card.positive {
+    display: block;
+    background: #d4edda;
+    border: 2px solid #28a745;
+}
+
+.result-card.negative {
+    display: block;
+    background: #f8d7da;
+    border: 2px solid #dc3545;
+}
+
+.result-card.neutral {
+    display: block;
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+}
+
+.emoji-big {
+    font-size: 4em;
+    margin-bottom: 10px;
+}
+
+.sentiment-text {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#confidence {
+    font-size: 1.1em;
+    color: #555;
+}
+
+.history-section {
+    margin-top: 30px;
+    border-top: 2px solid #eee;
+    padding-top: 20px;
+}
+
+.history-section h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+#history-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    margin: 5px 0;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #6c757d;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.history-item.positive {
+    border-left-color: #28a745;
+}
+
+.history-item.negative {
+    border-left-color: #dc3545;
+}
+
+.history-item.neutral {
+    border-left-color: #ffc107;
+}
+
+.history-item .text {
+    flex: 1;
+    color: #333;
+    font-size: 14px;
+}
+
+.history-item .sentiment-badge {
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    background: #6c757d;
+    color: white;
+}
+
+.history-item.positive .sentiment-badge {
+    background: #28a745;
+}
+
+.history-item.negative .sentiment-badge {
+    background: #dc3545;
+}
+
+.history-item.neutral .sentiment-badge {
+    background: #ffc107;
+    color: #333;
+}
+
+.history-item .score {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+.history-item .time {
+    color: #999;
+    font-size: 12px;
+}
+
+.empty {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+}
+
+#visualization {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#visualization h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#viz-image {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+    }
+    
+    .history-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
